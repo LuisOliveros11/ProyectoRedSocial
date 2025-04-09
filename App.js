@@ -6,6 +6,7 @@ import Login from "./src/tabs/Login";
 import Register from "./src/tabs/Register";
 import HomeScreen from './src/tabs/HomeScreen';
 import BottomNavigator from './src/Components/BottomNavigation';
+import SettingsScreen from './src/tabs/SettingsScreen';
 
 const Stack = createStackNavigator();
 
@@ -18,9 +19,11 @@ export default function App() {
             headerShown: true,
            }}  />
         <Stack.Screen name="Home" component={BottomNavigator}  options={{
-            headerShown: true,
+            headerShown: false,
            }}  />
+        
       </Stack.Navigator>
+      
     </NavigationContainer>
   );
 }

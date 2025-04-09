@@ -1,44 +1,64 @@
 import React, { Children } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from '../tabs/HomeScreen'; 
-import SettingsScreen from '../tabs/SettingsScreen';
-import PostImage from '../tabs/PostImage';
 import { Ionicons } from '@expo/vector-icons'; // Iconos para la barra inferior
 import { TouchableOpacity, Image } from 'react-native';
 import { View } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+
+
+
+import HomeScreen from '../tabs/HomeScreen'; 
+import SettingsScreen from '../tabs/SettingsScreen';
+import PostImage from '../tabs/PostImage';
+
 
 const Tab = createBottomTabNavigator();
-const CustomTabBarButton = ({ children, onPress }) => {
-  return (
-    <TouchableOpacity
+
+const pickImage = async () => {
+  try {
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+  } catch (error) {
+    console.error('Error al tomar la foto:', error);
+    alert('Error al procesar la imagen');
+  }
+};
+
+const CustomTabBarButton = ({ children, onPress }) => (
+  <TouchableOpacity
+    style={{
+      top: -30,
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}
+    onPress={() => {
+      pickImage()
+    }}
+  >
+    <View
       style={{
-        top: -30,
+        height: 70,
+        width: 70,
+        borderRadius: 35,
         justifyContent: 'center',
         alignItems: 'center',
       }}
-      onPress={onPress}
     >
-      <View
-        style={{
-          height: 70,
-          width: 70,
-          borderRadius: 35,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        {children}
-      </View>
-    </TouchableOpacity>
-  );
-};
+      {children}
+    </View>
+  </TouchableOpacity>
+);
 
 const BottomNavigator = () => {
   return (
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={{
-        headerShown: false, 
+        headerShown: true, 
+        
       }}
     >
       <Tab.Screen
@@ -52,7 +72,7 @@ const BottomNavigator = () => {
       />
       <Tab.Screen
         name="Post"
-        component={PostImage}
+        component={() => null}
         options={{
           tabBarIcon: ({ focused }) => (
             <Image
