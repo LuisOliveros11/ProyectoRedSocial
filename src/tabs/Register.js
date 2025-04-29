@@ -108,8 +108,40 @@ const Register = () => {
 
             <View style={styles.formAction}>
               <TouchableOpacity
-                onPress={() => {
-                  //
+                onPress={async () => {
+                  if (form.password !== form.confirmPassword) {
+                    alert("Las contraseñas no coinciden.");
+                    return;
+                  }
+                
+                  try {
+                    //CAMBIAR IP A LA IP DE SU EQUIPO (IPV4) Y, SI ES NECESARIO, TAMBIÉN EL PUERTO
+                    //EL PUERTO DEBE SER IGUAL AL PUERTO EN DONDE SE ESTÁ CORRIENDO EL PROYECTO DE LA API
+                    const response = await fetch("http://192.168.1.250:3000/registrarUsuario", { 
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json"
+                      },
+                      body: JSON.stringify({
+                        name: form.username,
+                        email: form.email,
+                        password: form.password
+                      })
+                    });
+                
+                    const data = await response.json();
+                
+                    if (response.ok) {
+                      alert("Usuario registrado correctamente");
+                      navigation.goBack(); // volver al login u otra pantalla
+                    } else {
+                      alert(data.message || "Error en el registro");
+                    }
+                
+                  } catch (error) {
+                    console.error("Error en el registro:", error);
+                    alert("No se pudo conectar al servidor.");
+                  }
                 }}>
                 <View style={styles.btn}>
                   <Text style={styles.btnText}>Registrate</Text>
