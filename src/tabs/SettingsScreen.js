@@ -1,10 +1,134 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ScrollView, Button } from 'react-native';
 
+import FeatherIcon from 'react-native-vector-icons/Feather'
 const SettingsScreen = () => {
   return (
-    <SafeAreaView style={styles.container}>
-      <Text>pantalla de configuracion</Text>
+    <SafeAreaView style={{flex: 1, backgroundColor: "#fff"}}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.profile}>
+          <TouchableOpacity onPress={() =>{
+            //Reedirigir a pantalla
+          }}>
+          <View style={styles.profileAvatarWrapper}>
+            <Image
+              alt="foto de perfil" 
+              source={require('../../assets/imagen_perfil_ejemplo.jpeg')}
+              style={styles.profileAvatar}  
+            />
+          </View>
+          <View style={styles.profileAction}>
+            <FeatherIcon name="edit-3" size={15} color="#fff" />
+          </View>
+
+          </TouchableOpacity>
+          <Text styke={styles.profileName}>Kevin Alberto</Text>
+          <Text style={styles.profileAddress}>kevin@ejemplo.com</Text>
+        </View>
+        
+        {/* Secciones que tendrá el apartado de ajustes/settings */}
+        <View style={styles.section}>
+          <Text style={styles.sectionHeader}>Cuenta</Text>
+          <TouchableOpacity onPress={() =>{
+            //Reedirigir a pantalla
+            }}>
+            <View style={styles.row}>
+              <View style={[styles.rowIcon, { backgroundColor: "#134ded" }]}>
+                <FeatherIcon name="bell" color="#fff" size={18}></FeatherIcon>
+              </View>
+              <Text style={[styles.rowLabel, { flex: 1 }]}>Notificaciones</Text>
+
+
+              <FeatherIcon
+                  name="chevron-right"
+                  color="#0c0c0c"
+                  size={22}
+              />        
+            </View>
+
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() =>{
+            //Reedirigir a pantalla
+            }}>
+            <View style={styles.row}>
+              <View style={[styles.rowIcon, { backgroundColor: "#134ded" }]}>
+                <FeatherIcon name="bookmark" color="#fff" size={18}></FeatherIcon>
+              </View>
+              <Text style={[styles.rowLabel, { flex: 1 }]}>Publicaciones guardadas</Text>
+
+
+              <FeatherIcon
+                  name="chevron-right"
+                  color="#0c0c0c"
+                  size={22}
+              />        
+            </View>
+
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionHeader}>Datos de la cuenta</Text>
+          <TouchableOpacity onPress={() =>{
+            //Reedirigir a pantalla
+            }}>
+            <View style={styles.row}>
+              <View style={[styles.rowIcon, { backgroundColor: "#134ded" }]}>
+                <FeatherIcon name="lock" color="#fff" size={18}></FeatherIcon>
+              </View>
+              <Text style={[styles.rowLabel, { flex: 1 }]}>Cambiar Contraseña</Text>
+
+
+              <FeatherIcon
+                  name="chevron-right"
+                  color="#0c0c0c"
+                  size={22}
+              />        
+            </View>
+
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() =>{
+            //Reedirigir a pantalla
+            }}>
+            <View style={styles.row}>
+              <View style={[styles.rowIcon, { backgroundColor: "#134ded" }]}>
+                <FeatherIcon name="edit-3" color="#fff" size={18}></FeatherIcon>
+              </View>
+              <Text style={[styles.rowLabel, { flex: 1 }]}>Editar perfil</Text>
+
+
+              <FeatherIcon
+                  name="chevron-right"
+                  color="#0c0c0c"
+                  size={22}
+              />        
+            </View>
+
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionHeader}>Sesión</Text>
+          <TouchableOpacity onPress={() =>{
+            //Reedirigir a pantalla
+            }}>
+            <View style={styles.row}>
+              <View style={[styles.rowIcon, { backgroundColor: "#134ded" }]}>
+                <FeatherIcon name="log-out" color="#fff" size={18}></FeatherIcon>
+              </View>
+              <Text style={[styles.rowLabel, { flex: 1 }]}>Cerrar sesión</Text>
+
+
+              <FeatherIcon
+                  name="chevron-right"
+                  color="#0c0c0c"
+                  size={22}
+              />        
+            </View>
+
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -13,50 +137,71 @@ export default SettingsScreen;
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      justifyContent: 'center',
+      paddingVertical: 24,
+    },
+    profile: {
+      padding: 24,
       alignItems: 'center',
-      backgroundColor: '#eBecf4',
+      justifyContent: 'center'
     },
-    logo_texto_container: {
+    profileName: {
+      marginTop: 20,
+      fontSize: 19,
+    },
+    profileAddress: {
+      marginTop: 5,
+      fontSize: 16,
+      color: '#989898',
+      textAlign: 'center'
+    },
+    profileAvatar: {
+      width: 90,
+      height: 90,
+      borderRadius: 9999,
+    },
+    profileAvatarWrapper: {
+      position: 'relative'
+    },
+    profileAction: {
+      width: 28,
+      height: 28,
+      borderRadius: 9999,
+      backgroundColor: '#007bff',
+      right: -60,
+      bottom: 20,
       alignItems: 'center',
-      paddingVertical: 15,
+      justifyContent: 'center'
     },
-    headerImg: {
-      width: 80,
-      height: 80,
-      alignSelf: 'center',
-      marginBottom: 20,
+    section: {
+      paddingHorizontal: 24,
     },
-    btn: {
-      backgroundColor: '#075eec',
-      borderRadius: 6,
-      borderWidth: 1,
-      borderColor: '#075eec',
-      paddingVertical: 10,
-      paddingHorizontal: 20,
-      marginBottom: 20,
-    },
-    btnText: {
-      fontSize: 18,
+    sectionHeader: {
+      paddingVertical: 12,
+      fontSize: 12,
       fontWeight: '600',
-      color: '#fff',
+      color: '#9e9e9e',
+      textTransform: 'uppercase',
+      letterSpacing: 1.1,
     },
-    imageContainer: {
-      width: '100%',
+    row: {
       flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'flex-start',
-      padding: 10,
-    },
-    imageWrapper: {
-      width: '33.33%',
-      marginBottom: 10,
       alignItems: 'center',
+      justifyContent: 'flex-start',
+      height: '50',
+      backgroundColor: '#f2f2f2',
+      borderRadius: 8,
+      marginBottom: 12,
+      paddingHorizontal: 12
     },
-    image: {
-      width: 100,
-      height: 100,
-      borderRadius: 10,
+    rowIcon: {
+      width: 32,
+      height: 32,
+      borderRadius: 999,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginRight: 12
     },
+    arrowIcon: {
+      alignItems: 'flex-end'
+    }
   });
