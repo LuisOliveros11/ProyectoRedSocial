@@ -64,8 +64,36 @@ const Login = () => {
 
                     <View style={styles.formAction}>
                         <TouchableOpacity
-                            onPress={() => {
-                                navigation.navigate('Home');
+                            onPress={async () => {
+                                //navigation.navigate('Home');
+                               
+                              
+                                try {
+                                  //CAMBIAR IP A LA IP DE SU EQUIPO (IPV4) Y, SI ES NECESARIO, TAMBIÉN EL PUERTO
+                                  //EL PUERTO DEBE SER IGUAL AL PUERTO EN DONDE SE ESTÁ CORRIENDO EL PROYECTO DE LA API
+                                  const response = await fetch("http://192.168.1.250:3000/iniciarSesion", { 
+                                    method: "POST",
+                                    headers: {
+                                      "Content-Type": "application/json"
+                                    },
+                                    body: JSON.stringify({
+                                      email: form.email,
+                                      password: form.password
+                                    })
+                                  });
+                              
+                                  const data = await response.json();
+                              
+                                  if (response.ok) {
+                                    navigation.navigate('Home');
+                                  } else {
+                                    alert(data.message || "Error al iniciar sesion");
+                                  }
+                              
+                                } catch (error) {
+                                  console.error("Error al iniciar seison:", error);
+                                  alert("No se pudo conectar al servidor.");
+                                }
                             }}>
                             <View style={styles.btn}>
                                 <Text style={styles.btnText}>Login</Text>
