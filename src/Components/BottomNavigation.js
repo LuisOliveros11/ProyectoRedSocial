@@ -1,7 +1,7 @@
 import React, { Children } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons'; // Iconos para la barra inferior
-import { TouchableOpacity, Image } from 'react-native';
+import { TouchableOpacity, Image, Text, StyleSheet } from 'react-native';
 import { View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -59,12 +59,40 @@ const BottomNavigator = () => {
       screenOptions={{
         headerShown: true, 
         
+        
       }}
     >
       <Tab.Screen
         name="Home"
         component={HomeScreen}
         options={{
+          headerTitle: '',
+          headerLeft: () => (
+         
+            <View style={styles.headerLeftWrapper}>
+              <TouchableOpacity
+                onPress={async () => {
+                  alert('Imagen presionada');
+                }}
+              >
+                <Image
+                  source={require('../../assets/imagen_perfil_ejemplo.jpeg')} 
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 20,
+                  }}
+                />
+              </TouchableOpacity>
+              <View style={styles.headerLeftText}>
+                  <Text style={{fontSize: 11}}>Hola,</Text>
+                  <Text style={{ fontSize: 14 }}>
+                    Bienvenido <Text style={{ fontWeight: 'bold' }}>Kevin</Text>
+                  </Text>
+              </View>
+            </View>
+            
+          ),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" size={size} color={color} />
           ),
@@ -102,3 +130,16 @@ const BottomNavigator = () => {
 };
 
 export default BottomNavigator;
+
+const styles = StyleSheet.create({
+    headerLeftWrapper: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginLeft: 5
+    },
+    headerLeftText: {
+      flexDirection: 'column',
+      marginLeft: 11
+    },
+   
+  });

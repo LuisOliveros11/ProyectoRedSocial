@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.kevin016011.ProyectoRedSocial"
     },
     "web": {
       "favicon": "./assets/favicon.png"
