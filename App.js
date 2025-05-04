@@ -7,24 +7,25 @@ import Register from "./src/tabs/Register";
 import HomeScreen from './src/tabs/HomeScreen';
 import BottomNavigator from './src/Components/BottomNavigation';
 import SettingsScreen from './src/tabs/SettingsScreen';
+import { AuthProvider } from './src/Components/AuthContext';
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Register" component={Register}  options={{
+    <AuthProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Register" component={Register} options={{
             headerShown: true,
-           }}  />
-        <Stack.Screen name="Home" component={BottomNavigator}  options={{
+          }} />
+          <Stack.Screen name="Home" component={BottomNavigator} options={{
             headerShown: false,
-           }}  />
-        
-      </Stack.Navigator>
-      
-    </NavigationContainer>
+          }} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AuthProvider>
   );
 }
 

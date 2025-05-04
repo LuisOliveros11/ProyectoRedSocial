@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { AuthContext } from '../Components/AuthContext';
 import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ScrollView } from 'react-native';
 
 const HomeScreen = () => {
+  const { authToken, userData } = useContext(AuthContext);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.logo_texto_container}>
