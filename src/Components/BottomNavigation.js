@@ -1,16 +1,15 @@
-import React, { Children } from 'react';
+import React, { Children, createContext, useState, useEffect, useContext } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons'; // Iconos para la barra inferior
 import { TouchableOpacity, Image, Text, StyleSheet } from 'react-native';
 import { View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
-
-
 import HomeScreen from '../tabs/HomeScreen'; 
 import SettingsScreen from '../tabs/SettingsScreen';
 import PostImage from '../tabs/PostImage';
 
+import { AuthContext } from './AuthContext';
 
 const Tab = createBottomTabNavigator();
 
@@ -53,6 +52,7 @@ const CustomTabBarButton = ({ children, onPress }) => (
 );
 
 const BottomNavigator = () => {
+  const { authToken, userData } = useContext(AuthContext);
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -85,9 +85,9 @@ const BottomNavigator = () => {
                 />
               </TouchableOpacity>
               <View style={styles.headerLeftText}>
-                  <Text style={{fontSize: 11}}>Hola,</Text>
+                  <Text style={{fontSize: 12}}>Hola,</Text>
                   <Text style={{ fontSize: 14 }}>
-                    Bienvenido <Text style={{ fontWeight: 'bold' }}>Kevin</Text>
+                    Bienvenido <Text style={{ fontWeight: 'bold' }}>{userData.name}</Text>
                   </Text>
               </View>
             </View>

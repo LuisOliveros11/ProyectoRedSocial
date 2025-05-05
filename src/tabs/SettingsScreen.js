@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ScrollView, Button } from 'react-native';
-
 import FeatherIcon from 'react-native-vector-icons/Feather'
+
+import { AuthContext } from '../Components/AuthContext';
+
 const SettingsScreen = () => {
+  const {authToken, userData} = useContext(AuthContext);
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: "#fff"}}>
       <ScrollView contentContainerStyle={styles.container}>
@@ -22,8 +25,8 @@ const SettingsScreen = () => {
           </View>
 
           </TouchableOpacity>
-          <Text styke={styles.profileName}>Kevin Alberto</Text>
-          <Text style={styles.profileAddress}>kevin@ejemplo.com</Text>
+          <Text style={styles.profileName}>{userData.name}</Text>
+          <Text style={styles.profileAddress}>{userData.email}</Text>
         </View>
         
         {/* Secciones que tendrá el apartado de ajustes/settings */}
@@ -145,8 +148,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center'
     },
     profileName: {
-      marginTop: 20,
-      fontSize: 19,
+      fontSize: 21,
     },
     profileAddress: {
       marginTop: 5,
