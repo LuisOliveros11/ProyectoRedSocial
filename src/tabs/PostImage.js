@@ -4,7 +4,7 @@ import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ScrollVi
 const PostImage = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Esto solo deberia abrir la camara, no una pantalla</Text>
+      <Text>Pantalla en donde se mostrará una vista previa de la publicación del usuario</Text>
     </SafeAreaView>
   );
 };
