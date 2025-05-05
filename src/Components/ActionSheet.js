@@ -44,6 +44,8 @@ const ActionSheet = forwardRef((props, ref) => {
       ref={sheetRef}
       height={360}
       openDuration={250}
+      draggable={true} 
+      closeOnPressMask={true}
       customStyles={{ container: styles.sheet }}
     >
       <View style={styles.sheetContent}>
@@ -112,4 +114,5 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#fff',
   },
+ 
 });
