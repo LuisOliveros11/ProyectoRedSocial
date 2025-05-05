@@ -5,8 +5,10 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import * as ImagePicker from 'expo-image-picker';
 
+
 const ActionSheet = forwardRef((props, ref) => {
   const sheetRef = useRef();
+  
 
   useImperativeHandle(ref, () => ({
     open: () => sheetRef.current.open(),
@@ -15,6 +17,18 @@ const ActionSheet = forwardRef((props, ref) => {
   const pickImage = async () => {
     try {
       let result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+    } catch (error) {
+      console.error('Error al tomar la foto:', error);
+      alert('Error al procesar la imagen');
+    }
+  };
+  const pickImageGallery = async () => {
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
@@ -39,7 +53,9 @@ const ActionSheet = forwardRef((props, ref) => {
           Seleccione una foto desde su galería o tome una foto
         </Text>
 
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => {
+            pickImageGallery();
+        }}>
           <View style={styles.btn}>
             <Text style={styles.btnText}>Abrir galería</Text>
           </View>
