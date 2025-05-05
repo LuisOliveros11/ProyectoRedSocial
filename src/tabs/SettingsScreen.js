@@ -16,7 +16,7 @@ const SettingsScreen = () => {
           <View style={styles.profileAvatarWrapper}>
             <Image
               alt="foto de perfil" 
-              source={require('../../assets/imagen_perfil_ejemplo.jpeg')}
+              source= {{ uri: userData.photo }}
               style={styles.profileAvatar}  
             />
           </View>

@@ -66,8 +66,10 @@ const BottomNavigator = () => {
                     alert('Imagen presionada');
                   }}
                 >
-                  <Image
-                    source={require('../../assets/imagen_perfil_ejemplo.jpeg')} 
+                 <Image
+                   source={{
+                    uri: userData.photo
+                  }}
                     style={{
                       width: 40,
                       height: 40,
