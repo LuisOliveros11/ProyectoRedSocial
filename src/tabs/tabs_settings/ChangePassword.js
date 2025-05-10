@@ -3,8 +3,9 @@ import { AuthContext } from '../../Components/AuthContext';
 
 import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ScrollView, Dimensions, TextInput } from 'react-native';
 import {useNavigation,} from '@react-navigation/native';
-const screenWidth = Dimensions.get('window').width;
+import FeatherIcon from 'react-native-vector-icons/Feather'
 
+const screenWidth = Dimensions.get('window').width;
 
 const ChangePassword = () => {
     const navigation = useNavigation();
@@ -25,36 +26,42 @@ const ChangePassword = () => {
                 <View style={styles.form}>
                     <View style={styles.input}>
                         <Text style={styles.inputLabel}>Nueva contraseña</Text>
-                        <TextInput
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                            clearButtonMode="while-editing"
-                            onChangeText={password =>
-                                setForm({ ...form, password })
-                            }
-                            placeholder="********"
-                            placeholderTextColor="#6b7280"
-                            style={styles.inputControl}
-                            secureTextEntry={true}
-                            value={form.password}
-                        />
+                        <View style={styles.inputWithIcon}>
+                            <TextInput
+                                autoCapitalize="none"
+                                autoCorrect={false}
+                                clearButtonMode="while-editing"
+                                onChangeText={password =>
+                                    setForm({ ...form, password })
+                                }
+                                placeholder="********"
+                                placeholderTextColor="#6b7280"
+                                style={styles.inputControlWithIcon}
+                                secureTextEntry={true}
+                                value={form.password}
+                            />
+                            <FeatherIcon name="lock" size={20} color="#134ded" style={styles.inputIcon} />
+                        </View>
                     </View>
 
                     <View style={styles.input}>
                         <Text style={styles.inputLabel}>Confirmar nueva contraseña</Text>
-                        <TextInput
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                            clearButtonMode="while-editing"
-                            onChangeText={confirmPassword =>
-                                setForm({ ...form, confirmPassword })
-                            }
-                            placeholder="********"
-                            placeholderTextColor="#6b7280"
-                            style={styles.inputControl}
-                            secureTextEntry={true}
-                            value={form.confirmPassword}
-                        />
+                        <View style={styles.inputWithIcon}>
+                            <TextInput
+                                autoCapitalize="none"
+                                autoCorrect={false}
+                                clearButtonMode="while-editing"
+                                onChangeText={confirmPassword =>
+                                    setForm({ ...form, confirmPassword })
+                                }
+                                placeholder="********"
+                                placeholderTextColor="#6b7280"
+                                style={styles.inputControlWithIcon}
+                                secureTextEntry={true}
+                                value={form.confirmPassword}
+                            />
+                            <FeatherIcon name="lock" size={20} color="#134ded" style={styles.inputIcon} />
+                        </View>
                     </View>
 
                     <View style={styles.formAction}>
@@ -181,15 +188,24 @@ const styles = StyleSheet.create({
         color: '#222',
         marginBottom: 8
     },
-    inputControl: {
-        height: 44,
+    inputWithIcon: {
+        flexDirection: 'row',
+        alignItems: 'center',
         backgroundColor: '#fff',
-        paddingHorizontal: 16,
         borderRadius: 12,
+        paddingHorizontal: 12,
+        height: 44,
+    },
+
+    inputControlWithIcon: {
+        flex: 1,
         fontSize: 15,
         fontWeight: '500',
-        color: '#222'
+        color: '#222',
+    },
 
+    inputIcon: {
+        marginLeft: 8,
     },
     btn: {
         backgroundColor: '#075eec',

@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
+import FeatherIcon from 'react-native-vector-icons/Feather'
+
 
 import {
   useNavigation,
@@ -36,31 +38,37 @@ const Login = () => {
         <View style={styles.form}>
           <View style={styles.input}>
             <Text style={styles.inputLabel}>Correo electrónico</Text>
-
-            <TextInput
-              autoCapitalize="none"
-              autoCorrect={false}
-              clearButtonMode="while-editing"
-              keyboardType="email-address"
-              onChangeText={email => setForm({ ...form, email })}
-              placeholder="anonimo@gmail.com"
-              placeholderTextColor="#6b7280"
-              style={styles.inputControl}
-              value={form.email} />
+            <View style={styles.inputWithIcon}>
+              <TextInput
+                autoCapitalize="none"
+                autoCorrect={false}
+                clearButtonMode="while-editing"
+                keyboardType="email-address"
+                onChangeText={email => setForm({ ...form, email })}
+                placeholder="anonimo@gmail.com"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControlWithIcon}
+                value={form.email} 
+              />
+              <FeatherIcon name="at-sign" size={20} color="#134ded" style={styles.inputIcon} />
+            </View>
           </View>
 
           <View style={styles.input}>
             <Text style={styles.inputLabel}>Contraseña</Text>
-
+            <View style={styles.inputWithIcon}>
             <TextInput
               autoCorrect={false}
               clearButtonMode="while-editing"
               onChangeText={password => setForm({ ...form, password })}
               placeholder="********"
               placeholderTextColor="#6b7280"
-              style={styles.inputControl}
+              style={styles.inputControlWithIcon}
               secureTextEntry={true}
-              value={form.password} />
+              value={form.password} 
+            />
+            <FeatherIcon name="lock" size={20} color="#134ded" style={styles.inputIcon} />
+            </View>
           </View>
 
           <View style={styles.formAction}>
@@ -177,15 +185,24 @@ const styles = StyleSheet.create({
     color: '#222',
     marginBottom: 8
   },
-  inputControl: {
-    height: 44,
+  inputWithIcon: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: '#fff',
-    paddingHorizontal: 16,
     borderRadius: 12,
+    paddingHorizontal: 12,
+    height: 44,
+  },
+
+  inputControlWithIcon: {
+    flex: 1,
     fontSize: 15,
     fontWeight: '500',
-    color: '#222'
+    color: '#222',
+  },
 
+  inputIcon: {
+    marginLeft: 8,
   },
   btn: {
     backgroundColor: '#075eec',

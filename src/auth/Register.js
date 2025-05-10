@@ -14,6 +14,9 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 
+import FeatherIcon from 'react-native-vector-icons/Feather'
+
+
 const Register = () => {
 
   const navigation = useNavigation();
@@ -28,82 +31,95 @@ const Register = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
       <View style={styles.container}>
-         <View style={styles.header}>
-            <Image
-                source={require('../../assets/login_logo.png')}
-                style={styles.headerImg}
-            />
-            <Text style={styles.title}>Pantalla de Registro</Text>
-            <Text style={styles.subtitle}>Crea tu cuenta en la plataforma</Text>
+        <View style={styles.header}>
+          <Image
+            source={require('../../assets/login_logo.png')}
+            style={styles.headerImg}
+          />
+          <Text style={styles.title}>Pantalla de Registro</Text>
+          <Text style={styles.subtitle}>Crea tu cuenta en la plataforma</Text>
         </View>
 
-        <ScrollView  showsVerticalScrollIndicator={false} >
+        <ScrollView showsVerticalScrollIndicator={false} >
           <View style={styles.form}>
             <View style={styles.input}>
               <Text style={styles.inputLabel}>Usuario</Text>
-              <TextInput
-                autoCapitalize="none"
-                autoCorrect={false}
-                clearButtonMode="while-editing"
-                onChangeText={username =>
-                  setForm({ ...form, username })
-                }
-                placeholder="tu_usuario"
-                placeholderTextColor="#6b7280"
-                style={styles.inputControl}
-                value={form.username}
-              />
+              <View style={styles.inputWithIcon}>
+                <TextInput
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  clearButtonMode="while-editing"
+                  onChangeText={username =>
+                    setForm({ ...form, username })
+                  }
+                  placeholder="tu_usuario"
+                  placeholderTextColor="#6b7280"
+                  style={styles.inputControlWithIcon}
+                  value={form.username}
+                />
+                <FeatherIcon name="user" size={20} color="#134ded" style={styles.inputIcon} />
+              </View>
             </View>
 
             <View style={styles.input}>
               <Text style={styles.inputLabel}>Correo electrónico</Text>
-              <TextInput
-                autoCapitalize="none"
-                autoCorrect={false}
-                clearButtonMode="while-editing"
-                keyboardType="email-address"
-                onChangeText={email =>
-                  setForm({ ...form, email })
-                }
-                placeholder="anonimo@gmail.com"
-                placeholderTextColor="#6b7280"
-                style={styles.inputControl}
-                value={form.email}
-              />
+              <View style={styles.inputWithIcon}>
+                <TextInput
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  clearButtonMode="while-editing"
+                  keyboardType="email-address"
+                  onChangeText={email =>
+                    setForm({ ...form, email })
+                  }
+                  placeholder="anonimo@gmail.com"
+                  placeholderTextColor="#6b7280"
+                  style={styles.inputControlWithIcon}
+                  value={form.email}
+                />
+                <FeatherIcon name="at-sign" size={20} color="#134ded" style={styles.inputIcon} />
+              </View>
             </View>
 
             <View style={styles.input}>
               <Text style={styles.inputLabel}>Contraseña</Text>
-              <TextInput
-                autoCapitalize="none"
-                autoCorrect={false}
-                clearButtonMode="while-editing"
-                onChangeText={password =>
-                  setForm({ ...form, password })
-                }
-                placeholder="********"
-                placeholderTextColor="#6b7280"
-                style={styles.inputControl}
-                secureTextEntry={true}
-                value={form.password}
-              />
+              <View style={styles.inputWithIcon}>
+                <TextInput
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  clearButtonMode="while-editing"
+                  onChangeText={password =>
+                    setForm({ ...form, password })
+                  }
+                  placeholder="********"
+                  placeholderTextColor="#6b7280"
+                  style={styles.inputControlWithIcon}
+                  secureTextEntry={true}
+                  value={form.password}
+                />
+                <FeatherIcon name="lock" size={20} color="#134ded" style={styles.inputIcon} />
+              </View>
+              
             </View>
 
             <View style={styles.input}>
               <Text style={styles.inputLabel}>Confirmar contraseña</Text>
-              <TextInput
-                autoCapitalize="none"
-                autoCorrect={false}
-                clearButtonMode="while-editing"
-                onChangeText={confirmPassword =>
-                  setForm({ ...form, confirmPassword })
-                }
-                placeholder="********"
-                placeholderTextColor="#6b7280"
-                style={styles.inputControl}
-                secureTextEntry={true}
-                value={form.confirmPassword}
-              />
+              <View style={styles.inputWithIcon}>
+                <TextInput
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  clearButtonMode="while-editing"
+                  onChangeText={confirmPassword =>
+                    setForm({ ...form, confirmPassword })
+                  }
+                  placeholder="********"
+                  placeholderTextColor="#6b7280"
+                  style={styles.inputControlWithIcon}
+                  secureTextEntry={true}
+                  value={form.confirmPassword}
+                />
+                <FeatherIcon name="lock" size={20} color="#134ded" style={styles.inputIcon} />
+              </View>
             </View>
 
             <View style={styles.formAction}>
@@ -113,11 +129,11 @@ const Register = () => {
                     alert("Las contraseñas no coinciden.");
                     return;
                   }
-                
+
                   try {
                     //CAMBIAR IP A LA IP DE SU EQUIPO (IPV4) Y, SI ES NECESARIO, TAMBIÉN EL PUERTO
                     //EL PUERTO DEBE SER IGUAL AL PUERTO EN DONDE SE ESTÁ CORRIENDO EL PROYECTO DE LA API
-                    const response = await fetch("http://192.168.1.250:3000/registrarUsuario", { 
+                    const response = await fetch("http://192.168.1.250:3000/registrarUsuario", {
                       method: "POST",
                       headers: {
                         "Content-Type": "application/json"
@@ -128,16 +144,16 @@ const Register = () => {
                         password: form.password
                       })
                     });
-                
+
                     const data = await response.json();
-                
+
                     if (response.ok) {
                       alert("Usuario registrado correctamente");
                       navigation.goBack(); // volver al login u otra pantalla
                     } else {
                       alert(data.message || "Error en el registro");
                     }
-                
+
                   } catch (error) {
                     console.error("Error en el registro:", error);
                     alert("No se pudo conectar al servidor.");
@@ -160,7 +176,7 @@ const Register = () => {
           </View>
 
         </ScrollView>
-     
+
       </View>
 
     </SafeAreaView>
@@ -173,7 +189,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 24,
     flex: 1,
-    
+
   },
   header: {
     marginVertical: 10,
@@ -197,7 +213,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
     color: '#929292',
-    textAlign: 'center' 
+    textAlign: 'center'
   },
   form: {
     marginBottom: 24,
@@ -215,23 +231,32 @@ const styles = StyleSheet.create({
     letterSpacing: 0.15
   },
   input: {
-    marginBottom: 16
+    marginBottom: 24
   },
   inputLabel: {
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: 500,
     color: '#222',
     marginBottom: 8
   },
-  inputControl: {
-    height: 44,
+  inputWithIcon: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: '#fff',
-    paddingHorizontal: 16,
     borderRadius: 12,
+    paddingHorizontal: 12,
+    height: 44,
+  },
+
+  inputControlWithIcon: {
+    flex: 1,
     fontSize: 15,
     fontWeight: '500',
-    color: '#222'
+    color: '#222',
+  },
 
+  inputIcon: {
+    marginLeft: 8,
   },
   btn: {
     backgroundColor: '#075eec',
@@ -250,5 +275,5 @@ const styles = StyleSheet.create({
     color: '#fff'
 
   }
-      
+
 })

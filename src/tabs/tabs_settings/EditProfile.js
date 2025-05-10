@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../../Components/AuthContext';
-
+import FeatherIcon from 'react-native-vector-icons/Feather'
 import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ScrollView, Dimensions, TextInput } from 'react-native';
 import { useNavigation, } from '@react-navigation/native';
 const screenWidth = Dimensions.get('window').width;
@@ -23,45 +23,46 @@ const EditProfile = () => {
             </View>
             <ScrollView showsVerticalScrollIndicator={false} >
                 <View style={styles.form}>
-
                     <View style={styles.input}>
                         <Text style={styles.inputLabel}>Nombre</Text>
-                        <TextInput
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                            clearButtonMode="while-editing"
-                            onChangeText={username =>
-                                setForm({ ...form, username })
-                            }
-                            placeholder={userData.name}
-                            placeholderTextColor="#6b7280"
-                            style={styles.inputControl}
-                            value={form.username}
-                        />
+                        <View style={styles.inputWithIcon}>
+                            <TextInput
+                                autoCapitalize="none"
+                                autoCorrect={false}
+                                clearButtonMode="while-editing"
+                                onChangeText={username => setForm({ ...form, username })}
+                                placeholder={userData.name}
+                                placeholderTextColor="#6b7280"
+                                style={styles.inputControlWithIcon}
+                                value={form.username}
+                            />
+                            <FeatherIcon name="user" size={20} color="#134ded" style={styles.inputIcon} />
+                        </View>
                     </View>
 
                     <View style={styles.input}>
                         <Text style={styles.inputLabel}>Correo electrónico</Text>
-                        <TextInput
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                            clearButtonMode="while-editing"
-                            keyboardType="email-address"
-                            onChangeText={email =>
-                                setForm({ ...form, email })
-                            }
-                            placeholder={userData.email}
-                            placeholderTextColor="#6b7280"
-                            style={styles.inputControl}
-                            value={form.email}
-                        />
+                        <View style={styles.inputWithIcon}>
+                            <TextInput
+                                autoCapitalize="none"
+                                autoCorrect={false}
+                                clearButtonMode="while-editing"
+                                keyboardType="email-address"
+                                onChangeText={email => setForm({ ...form, email })}
+                                placeholder={userData.email}
+                                placeholderTextColor="#6b7280"
+                                style={styles.inputControlWithIcon}
+                                value={form.email}
+                            />
+                            <FeatherIcon name="at-sign" size={20} color="#134ded" style={styles.inputIcon} />
+                        </View>
                     </View>
 
 
                     <View style={styles.formAction}>
                         <TouchableOpacity
                             onPress={async () => {
-                           
+
                                 try {
                                     //CAMBIAR IP A LA IP DE SU EQUIPO (IPV4) Y, SI ES NECESARIO, TAMBIÉN EL PUERTO
                                     //EL PUERTO DEBE SER IGUAL AL PUERTO EN DONDE SE ESTÁ CORRIENDO EL PROYECTO DE LA API
@@ -168,25 +169,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         letterSpacing: 0.15
     },
-    input: {
-        marginBottom: 16
-    },
-    inputLabel: {
-        fontSize: 17,
-        fontWeight: 500,
-        color: '#222',
-        marginBottom: 8
-    },
-    inputControl: {
-        height: 44,
-        backgroundColor: '#fff',
-        paddingHorizontal: 16,
-        borderRadius: 12,
-        fontSize: 15,
-        fontWeight: '500',
-        color: '#222'
-
-    },
     btn: {
         backgroundColor: '#075eec',
         borderRadius: 16,
@@ -203,6 +185,34 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: '#fff'
 
-    }
+    },
+    input: {
+        marginBottom: 24
+    },
+    inputLabel: {
+        fontSize: 15,
+        fontWeight: 500,
+        color: '#222',
+        marginBottom: 8
+    },
+    inputWithIcon: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        borderRadius: 12,
+        paddingHorizontal: 12,
+        height: 44,
+    },
+
+    inputControlWithIcon: {
+        flex: 1,
+        fontSize: 15,
+        fontWeight: '500',
+        color: '#222',
+    },
+
+    inputIcon: {
+        marginLeft: 8,
+    },
 
 });
