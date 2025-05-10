@@ -95,7 +95,7 @@ const EditProfile = () => {
                                 }
                             }}>
                             <View style={styles.btn}>
-                                <Text style={styles.btnText}>Cambiar contraseña</Text>
+                                <Text style={styles.btnText}>Editar perfil</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
