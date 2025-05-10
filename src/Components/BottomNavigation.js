@@ -97,11 +97,11 @@ const BottomNavigator = () => {
           options={{
             tabBarIcon: ({ focused }) => (
               <Image
-                source={require('../../assets/plus_icon.png')}
+                source={require('../../assets/plus_icon_2.png')}
                 resizeMode="contain"
                 style={{
-                  width: 65, 
-                  height: 70,
+                  width: 60, 
+                  height: 65,
                 }}
               />
             ),
