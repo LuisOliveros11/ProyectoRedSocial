@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Login from "./src/auth/Login";
 import Register from "./src/auth/Register";
 import ChangePassword from './src/tabs/tabs_settings/ChangePassword';
+import EditProfile from './src/tabs/tabs_settings/EditProfile';
 import BottomNavigator from './src/Components/BottomNavigation';
 import SettingsScreen from './src/tabs/SettingsScreen';
 import { AuthProvider } from './src/Components/AuthContext';
@@ -26,6 +27,10 @@ export default function App() {
            <Stack.Screen name="Change password" component={ChangePassword} options={{
             headerShown: true,
           }} />
+          <Stack.Screen name="Edit profile" component={EditProfile} options={{
+            headerShown: true,
+          }} />
+          
         </Stack.Navigator>
       </NavigationContainer>
     </AuthProvider>

@@ -93,7 +93,7 @@ const SettingsScreen = () => {
 
           </TouchableOpacity>
           <TouchableOpacity onPress={() =>{
-            //Reedirigir a pantalla
+            navigation.navigate('Edit profile');
             }}>
             <View style={styles.row}>
               <View style={[styles.rowIcon, { backgroundColor: "#134ded" }]}>
