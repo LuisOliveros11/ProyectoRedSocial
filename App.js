@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Login from "./src/auth/Login";
 import Register from "./src/auth/Register";
-import HomeScreen from './src/tabs/HomeScreen';
+import ChangePassword from './src/tabs/tabs_settings/ChangePassword';
 import BottomNavigator from './src/Components/BottomNavigation';
 import SettingsScreen from './src/tabs/SettingsScreen';
 import { AuthProvider } from './src/Components/AuthContext';
@@ -22,6 +22,9 @@ export default function App() {
           }} />
           <Stack.Screen name="Home" component={BottomNavigator} options={{
             headerShown: false,
+          }} />
+           <Stack.Screen name="Change password" component={ChangePassword} options={{
+            headerShown: true,
           }} />
         </Stack.Navigator>
       </NavigationContainer>

@@ -3,8 +3,10 @@ import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ScrollVi
 import FeatherIcon from 'react-native-vector-icons/Feather'
 
 import { AuthContext } from '../Components/AuthContext';
+import {useNavigation} from '@react-navigation/native';
 
 const SettingsScreen = () => {
+  const navigation = useNavigation();
   const {authToken, userData} = useContext(AuthContext);
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: "#fff"}}>
@@ -73,7 +75,7 @@ const SettingsScreen = () => {
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>Datos de la cuenta</Text>
           <TouchableOpacity onPress={() =>{
-            //Reedirigir a pantalla
+              navigation.navigate('Change password');
             }}>
             <View style={styles.row}>
               <View style={[styles.rowIcon, { backgroundColor: "#134ded" }]}>
