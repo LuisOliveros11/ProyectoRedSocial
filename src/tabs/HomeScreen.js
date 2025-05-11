@@ -4,7 +4,6 @@ import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ScrollVi
 import Post from '../Components/Post'
 
 const HomeScreen = () => {
-  const { authToken, userData } = useContext(AuthContext);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={{ paddingBottom: 50 }}  bounces={false} overScrollMode="never" alwaysBounceVertical={false}>

@@ -17,8 +17,12 @@ const Tab = createBottomTabNavigator();
 const BottomNavigator = () => {
   const { authToken, userData } = useContext(AuthContext);
   const sheetRef = useRef();
-  const CustomTabBarButton = ({ children }) => (
 
+  if (!authToken || !userData) {
+    return null;
+  }
+  
+  const CustomTabBarButton = ({ children }) => (
     <TouchableOpacity
       style={{
         top: -30,
@@ -110,7 +114,7 @@ const BottomNavigator = () => {
           }}
         />
         <Tab.Screen
-          name="Settings"
+          name="Ajustes"
           component={SettingsScreen}
           options={{
             tabBarIcon: ({ color, size }) => (

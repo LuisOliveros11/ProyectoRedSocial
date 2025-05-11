@@ -24,10 +24,10 @@ export default function App() {
           <Stack.Screen name="Home" component={BottomNavigator} options={{
             headerShown: false,
           }} />
-           <Stack.Screen name="Change password" component={ChangePassword} options={{
+           <Stack.Screen name="Cambiar contraseña" component={ChangePassword} options={{
             headerShown: true,
           }} />
-          <Stack.Screen name="Edit profile" component={EditProfile} options={{
+          <Stack.Screen name="Editar perfil" component={EditProfile} options={{
             headerShown: true,
           }} />
           

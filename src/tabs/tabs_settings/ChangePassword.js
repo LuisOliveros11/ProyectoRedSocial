@@ -18,8 +18,7 @@ const ChangePassword = () => {
         <SafeAreaView style={styles.container}>
             <View style={styles.TextContainer}>
                 <Text style={styles.descriptionText}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    Elige una nueva contraseña para tu cuenta. Recuerda que debe ser segura. 
                 </Text>
             </View>
             <ScrollView showsVerticalScrollIndicator={false} >
@@ -81,10 +80,11 @@ const ChangePassword = () => {
                                 try {
                                     //CAMBIAR IP A LA IP DE SU EQUIPO (IPV4) Y, SI ES NECESARIO, TAMBIÉN EL PUERTO
                                     //EL PUERTO DEBE SER IGUAL AL PUERTO EN DONDE SE ESTÁ CORRIENDO EL PROYECTO DE LA API
-                                    const response = await fetch(`http://192.168.1.250:3000/actualizarUsuario/${userData.id}`, {
+                                    const response = await fetch(`http://192.168.1.81:3000/actualizarUsuario/${userData.id}`, {
                                         method: "PUT",
                                         headers: {
-                                            "Content-Type": "application/json"
+                                            "Content-Type": "application/json",
+                                            'Authorization': `Bearer ${authToken}`,
                                         },
                                         body: JSON.stringify({
                                             password: form.password

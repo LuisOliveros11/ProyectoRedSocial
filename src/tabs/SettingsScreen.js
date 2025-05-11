@@ -1,15 +1,29 @@
 import React, { useContext, useRef } from 'react';
 import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ScrollView, Button } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather'
-
 import { AuthContext } from '../Components/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import ActionSheet from '../Components/ActionSheet';
+import { CommonActions } from '@react-navigation/native';
 
 const SettingsScreen = () => {
   const navigation = useNavigation();
-  const { authToken, userData } = useContext(AuthContext);
+  const { authToken, userData, logout } = useContext(AuthContext);
   const sheetRef = useRef();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'Login' }]
+        })
+      );
+    } catch (e) {
+      console.error('Error al cerrar sesión:', e);
+    }
+  };
   return (
     <>
       <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
@@ -78,7 +92,7 @@ const SettingsScreen = () => {
           <View style={styles.section}>
             <Text style={styles.sectionHeader}>Datos de la cuenta</Text>
             <TouchableOpacity onPress={() => {
-              navigation.navigate('Change password');
+              navigation.navigate('Cambiar contraseña');
             }}>
               <View style={styles.row}>
                 <View style={[styles.rowIcon, { backgroundColor: "#134ded" }]}>
@@ -96,7 +110,7 @@ const SettingsScreen = () => {
 
             </TouchableOpacity>
             <TouchableOpacity onPress={() => {
-              navigation.navigate('Edit profile');
+              navigation.navigate('Editar perfil');
             }}>
               <View style={styles.row}>
                 <View style={[styles.rowIcon, { backgroundColor: "#134ded" }]}>
@@ -117,16 +131,12 @@ const SettingsScreen = () => {
 
           <View style={styles.section}>
             <Text style={styles.sectionHeader}>Sesión</Text>
-            <TouchableOpacity onPress={() => {
-              //Reedirigir a pantalla
-            }}>
+            <TouchableOpacity onPress={handleLogout}>
               <View style={styles.row}>
                 <View style={[styles.rowIcon, { backgroundColor: "#134ded" }]}>
                   <FeatherIcon name="log-out" color="#fff" size={18}></FeatherIcon>
                 </View>
                 <Text style={[styles.rowLabel, { flex: 1 }]}>Cerrar sesión</Text>
-
-
                 <FeatherIcon
                   name="chevron-right"
                   color="#0c0c0c"

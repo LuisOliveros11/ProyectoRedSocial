@@ -59,7 +59,7 @@ const ActionSheet = forwardRef((props, ref) => {
 
     const attemptUpload = async () => {
       try {
-        const response = await timeout(60000, fetch(`http://192.168.1.250:3000/actualizarUsuario/${userData.id}`, {
+        const response = await timeout(60000, fetch(`http://192.168.1.81:3000/actualizarUsuario/${userData.id}`, {
           method: 'PUT',
           body: formData,
           headers: {
