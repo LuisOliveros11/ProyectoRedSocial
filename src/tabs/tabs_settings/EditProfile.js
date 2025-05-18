@@ -3,11 +3,14 @@ import { AuthContext } from '../../Components/AuthContext';
 import FeatherIcon from 'react-native-vector-icons/Feather'
 import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ScrollView, Dimensions, TextInput } from 'react-native';
 import { useNavigation, } from '@react-navigation/native';
+
+import { BASE_URL } from '../../../config';
 const screenWidth = Dimensions.get('window').width;
 
 
 const EditProfile = () => {
     const navigation = useNavigation();
+    const baseUrl = BASE_URL;
     const [form, setForm] = useState({
         username: '',
         email: '',
@@ -66,7 +69,7 @@ const EditProfile = () => {
                                 try {
                                     //CAMBIAR IP A LA IP DE SU EQUIPO (IPV4) Y, SI ES NECESARIO, TAMBIÉN EL PUERTO
                                     //EL PUERTO DEBE SER IGUAL AL PUERTO EN DONDE SE ESTÁ CORRIENDO EL PROYECTO DE LA API
-                                    const response = await fetch(`http://192.168.1.81:3000/actualizarUsuario/${userData.id}`, {
+                                    const response = await fetch(`${baseUrl}/actualizarUsuario/${userData.id}`, {
                                         method: "PUT",
                                         headers: {
                                             "Content-Type": "application/json",

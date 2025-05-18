@@ -6,11 +6,11 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import * as ImagePicker from 'expo-image-picker';
 import { AuthContext } from './AuthContext';
 
+import { BASE_URL } from '../../config';
 const ActionSheet = forwardRef((props, ref) => {
   const sheetRef = useRef();
   const { authToken, userData, updateUserData } = useContext(AuthContext);
-
-
+  const baseUrl = BASE_URL;
 
   const [title, setDescription] = useState(
     props.title || 'Hacer una publicación'
@@ -59,12 +59,13 @@ const ActionSheet = forwardRef((props, ref) => {
 
     const attemptUpload = async () => {
       try {
-        const response = await timeout(60000, fetch(`http://192.168.1.81:3000/actualizarUsuario/${userData.id}`, {
+        const response = await timeout(60000, fetch(`${baseUrl}/actualizarUsuario/${userData.id}`, {
           method: 'PUT',
           body: formData,
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${authToken}`,
           },
         }));
 

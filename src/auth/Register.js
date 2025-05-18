@@ -16,11 +16,12 @@ import {
 
 import FeatherIcon from 'react-native-vector-icons/Feather'
 
+import { BASE_URL } from '../../config'; 
 
 const Register = () => {
 
   const navigation = useNavigation();
-
+  const baseUrl = BASE_URL;
   const [form, setForm] = useState({
     username: '',
     email: '',
@@ -133,7 +134,7 @@ const Register = () => {
                   try {
                     //CAMBIAR IP A LA IP DE SU EQUIPO (IPV4) Y, SI ES NECESARIO, TAMBIÉN EL PUERTO
                     //EL PUERTO DEBE SER IGUAL AL PUERTO EN DONDE SE ESTÁ CORRIENDO EL PROYECTO DE LA API
-                    const response = await fetch("http://192.168.1.81:3000/registrarUsuario", {
+                    const response = await fetch(`${baseUrl}/registrarUsuario`, {
                       method: "POST",
                       headers: {
                         "Content-Type": "application/json"

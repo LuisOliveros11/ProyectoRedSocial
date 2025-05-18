@@ -14,10 +14,13 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import { AuthContext } from '../Components/AuthContext';
+import { BASE_URL } from '../../config'; 
 
 const Login = () => {
   const navigation = useNavigation();
   const { login } = useContext(AuthContext);
+  const baseUrl = BASE_URL;
+  
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -76,7 +79,7 @@ const Login = () => {
                 try {
                   //CAMBIAR IP A LA IP DE SU EQUIPO (IPV4) Y, SI ES NECESARIO, TAMBIÉN EL PUERTO
                   //EL PUERTO DEBE SER IGUAL AL PUERTO EN DONDE SE ESTÁ CORRIENDO EL PROYECTO DE LA API
-                  const response = await fetch("http://192.168.1.81:3000/iniciarSesion", {
+                  const response = await fetch(`${baseUrl}/iniciarSesion`, {
                     method: "POST",
                     headers: {
                       "Content-Type": "application/json"
