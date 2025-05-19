@@ -6,6 +6,7 @@ import Login from "./src/auth/Login";
 import Register from "./src/auth/Register";
 import ChangePassword from './src/tabs/tabs_settings/ChangePassword';
 import EditProfile from './src/tabs/tabs_settings/EditProfile';
+import PostImage from './src/tabs/PostImage';
 import BottomNavigator from './src/Components/BottomNavigation';
 import SettingsScreen from './src/tabs/SettingsScreen';
 import { AuthProvider } from './src/Components/AuthContext';
@@ -28,6 +29,9 @@ export default function App() {
             headerShown: true,
           }} />
           <Stack.Screen name="Editar perfil" component={EditProfile} options={{
+            headerShown: true,
+          }} />
+           <Stack.Screen name="PostImage" component={PostImage} options={{
             headerShown: true,
           }} />
           

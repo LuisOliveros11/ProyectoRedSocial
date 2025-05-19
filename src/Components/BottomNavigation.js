@@ -11,12 +11,18 @@ import PostImage from '../tabs/PostImage';
 import { AuthContext } from './AuthContext';
 import ActionSheet from './ActionSheet'; 
 
+import { useNavigation } from '@react-navigation/native';
+
 
 const Tab = createBottomTabNavigator();
 
 const BottomNavigator = () => {
   const { authToken, userData } = useContext(AuthContext);
   const sheetRef = useRef();
+  const navigation = useNavigation();
+  const onImagePicked = (uri) => {
+    navigation.navigate('PostImage', { imageUri: uri });
+  };
 
   if (!authToken || !userData) {
     return null;
@@ -123,7 +129,11 @@ const BottomNavigator = () => {
           }}
         />
       </Tab.Navigator>
-      <ActionSheet ref={sheetRef} />
+      <ActionSheet
+        ref={sheetRef}
+        title="Realizar publicacion"
+          onImagePicked={onImagePicked}
+      />
     </>
     
   );

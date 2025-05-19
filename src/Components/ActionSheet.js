@@ -1,150 +1,97 @@
 // ActionSheet.js
 import React, { forwardRef, useImperativeHandle, useRef, useState, useContext } from 'react';
-import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, View, Alert } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import * as ImagePicker from 'expo-image-picker';
 import { AuthContext } from './AuthContext';
-
 import { BASE_URL } from '../../config';
-const ActionSheet = forwardRef((props, ref) => {
+
+const ActionSheet = forwardRef(({ title: initialTitle, onImagePicked }, ref) => {
   const sheetRef = useRef();
   const { authToken, userData, updateUserData } = useContext(AuthContext);
   const baseUrl = BASE_URL;
 
-  const [title, setDescription] = useState(
-    props.title || 'Hacer una publicación'
-  );
-
+  const [title, setTitle] = useState(initialTitle || 'Hacer una publicación');
 
   useImperativeHandle(ref, () => ({
-    open: (newDescription) => {
-      if (newDescription) setDescription(newDescription);
+    open: (newTitle) => {
+      if (newTitle) setTitle(newTitle);
       sheetRef.current.open();
     },
-    close: () => sheetRef.current.close()
+    close: () => sheetRef.current.close(),
   }));
 
-  const uploadImage = async (imageUri) => {
+  const uploadImage = async (uri) => {
     const formData = new FormData();
-    const fileName = imageUri.split('/').pop();
+    const fileName = uri.split('/').pop();
     const match = /\.(\w+)$/.exec(fileName ?? '');
-    const fileType = match ? `image/${match[1]}` : `image`;
-    formData.append('photo', {
-      uri: imageUri,
-      name: fileName,
-      type: fileType
-    });
+    const fileType = match ? `image/${match[1]}` : 'image';
+    formData.append('photo', { uri, name: fileName, type: fileType });
 
-    const maxRetries = 3;
-    let retryCount = 0;
-
-    const timeout = (ms, promise) => {
-      return new Promise((resolve, reject) => {
-        const timer = setTimeout(() => {
-          reject(new Error("La solicitud tardó demasiado. Intenta con una imagen más liviana."));
-        }, ms);
-
-        promise
-          .then((res) => {
-            clearTimeout(timer);
-            resolve(res);
-          })
-          .catch((err) => {
-            clearTimeout(timer);
-            reject(err);
-          });
-      });
-    };
-
-    const attemptUpload = async () => {
-      try {
-        const response = await timeout(60000, fetch(`${baseUrl}/actualizarUsuario/${userData.id}`, {
+    try {
+      const response = await fetch(
+        `${baseUrl}/actualizarUsuario/${userData.id}`,
+        {
           method: 'PUT',
           body: formData,
           headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'multipart/form-data',
-            'Authorization': `Bearer ${authToken}`,
+            Accept: 'application/json',
+            Authorization: `Bearer ${authToken}`,
           },
-        }));
-
-        if (!response.ok) {
-          throw new Error(`Error HTTP: ${response.status}`);
         }
-
-        const data = await response.json();
-
-        if (data.user && data.user.photo) {
-          await updateUserData({
-            ...userData,
-            photo: data.user.photo,
-          });
-          alert("Los datos se han actualizado exitosamente");
-          return true;
-        } else {
-          throw new Error("No se recibió la información de la foto actualizada");
-        }
-      } catch (error) {
-        if (retryCount < maxRetries - 1) {
-          retryCount++;
-          await new Promise(resolve => setTimeout(resolve, 2000));
-          return attemptUpload();
-        }
-        throw error;
-      }
-    };
-
-    try {
-      await attemptUpload();
-    } catch (error) {
-      let errorMessage = 'Error al subir la imagen. ';
-      
-      if (error.message.includes('Network request failed')) {
-        errorMessage += 'Por favor, verifica tu conexión a internet e intenta nuevamente.';
-      } else if (error.message.includes('tardó demasiado')) {
-        errorMessage += 'La imagen es demasiado pesada. Intenta con una imagen más liviana.';
+      );
+      if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+      const data = await response.json();
+      if (data.user?.photo) {
+        await updateUserData({ ...userData, photo: data.user.photo });
+        Alert.alert('Éxito', 'Foto de perfil actualizada');
       } else {
-        errorMessage += 'Por favor, intente nuevamente.';
+        throw new Error('No se recibió foto actualizada');
       }
-      
-      setTimeout(() => {
-        alert(errorMessage);
-        sheetRef.current?.close();
-      }, 0);
+    } catch (err) {
+      Alert.alert('Error al subir imagen', err.message);
     }
   };
+
+  const handleImageUri = async (uri) => {
+    if (typeof onImagePicked === 'function') {
+      onImagePicked(uri);
+    } else {
+      await uploadImage(uri);
+    }
+    sheetRef.current.close();
+  };
+
   const pickImageGallery = async () => {
-    try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-
-      if (!result.canceled) {
-        const imageUri = result.assets[0].uri;
-        await uploadImage(imageUri);
-      }
-    } catch (error) {
-      sheetRef.current?.close();
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permiso denegado', 'Necesitamos acceso a la galería');
+      return;
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    if (!result.canceled) {
+      await handleImageUri(result.assets[0].uri);
     }
   };
 
-  const pickImage = async () => {
-    try {
-      const result = await ImagePicker.launchCameraAsync({
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-
-      if (!result.canceled) {
-        const imageUri = result.assets[0].uri;
-        await uploadImage(imageUri);
-      }
-    } catch (error) {
-      sheetRef.current?.close();
+  const pickImageCamera = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permiso denegado', 'Necesitamos acceso a la cámara');
+      return;
+    }
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    if (!result.canceled) {
+      await handleImageUri(result.assets[0].uri);
     }
   };
 
@@ -153,32 +100,31 @@ const ActionSheet = forwardRef((props, ref) => {
       ref={sheetRef}
       height={360}
       openDuration={250}
-      draggable={true}
-      closeOnPressMask={true}
+      draggable
+      closeOnPressMask
       customStyles={{ container: styles.sheet }}
     >
       <View style={styles.sheetContent}>
-        <FeatherIcon name="image" color="#2b64e3" size={48} style={{ alignSelf: 'center' }} />
-        <Text style={styles.title}>
-          {title}
-        </Text>
+        <FeatherIcon
+          name="image"
+          color="#2b64e3"
+          size={48}
+          style={{ alignSelf: 'center' }}
+        />
+        <Text style={styles.title}>{title}</Text>
         <Text style={styles.message}>
           Seleccione una foto desde su galería o tome una foto
         </Text>
 
-        <TouchableOpacity onPress={() => {
-          pickImageGallery();
-        }}>
+        <TouchableOpacity onPress={pickImageGallery}>
           <View style={styles.btn}>
             <Text style={styles.btnText}>Abrir galería</Text>
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => {
-          pickImage();
-        }}>
-          <View style={[styles.btn, { marginTop: 12, backgroundColor: '#FFF', borderWidth: 1, }]}>
-            <Text style={[styles.btnText, { color: '#2b64e3' }]}>Tomar foto</Text>
+        <TouchableOpacity onPress={pickImageCamera}>
+          <View style={[styles.btn, styles.btnAlt]}>
+            <Text style={[styles.btnText, styles.btnAltText]}>Tomar foto</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -225,5 +171,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#fff',
   },
-
+  btnAlt: {
+    marginTop: 12,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+  },
+  btnAltText: {
+    color: '#2b64e3',
+  },
 });
