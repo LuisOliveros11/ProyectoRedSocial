@@ -31,7 +31,7 @@ export default function App() {
           <Stack.Screen name="Editar perfil" component={EditProfile} options={{
             headerShown: true,
           }} />
-           <Stack.Screen name="PostImage" component={PostImage} options={{
+           <Stack.Screen name="Vista previa" component={PostImage} options={{
             headerShown: true,
           }} />
           

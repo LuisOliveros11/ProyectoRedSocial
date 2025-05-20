@@ -21,7 +21,7 @@ const BottomNavigator = () => {
   const sheetRef = useRef();
   const navigation = useNavigation();
   const onImagePicked = (uri) => {
-    navigation.navigate('PostImage', { imageUri: uri });
+    navigation.navigate('Vista previa', { imageUri: uri });
   };
 
   if (!authToken || !userData) {
