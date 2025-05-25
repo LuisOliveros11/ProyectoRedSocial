@@ -1,85 +1,98 @@
-import { View, Text, Image, Dimensions, TouchableOpacity, StyleSheet } from 'react-native';
-import React from 'react';
+import { View, Text, Image, Dimensions, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import { useEffect, useState, useContext } from "react";
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import { BASE_URL } from '../../config';
+import { AuthContext } from './AuthContext';
 
 const screenWidth = Dimensions.get('window').width;
 
 const Post = () => {
-    return (
-        <View style={styles.container}>
-            <View style={styles.postContainer}>
-                <View>
-                    <View style={styles.header}>
-                        <Image 
-                            style={styles.profileImage} 
-                            source={require('../../assets/imagen_perfil_ejemplo.jpeg')} 
-                        />
-                        <Text style={styles.title}>Nombre de usuario</Text>
-                    </View>
-                    <View>
-                        <Image  
-                            style={styles.postImage} 
-                            source={require('../../assets/post.jpg')} 
-                        />
-                    </View>
-                    <View style={styles.actions}>
-                        <TouchableOpacity>
-                            <FeatherIcon name="heart" color="#2b64e3" size={24} style={styles.iconHeart} />
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <FeatherIcon name="message-circle" color="#2b64e3" size={24} style={styles.iconMessage} />
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <FeatherIcon name="bookmark" color="#2b64e3" size={24} style={styles.iconMessage} />
-                        </TouchableOpacity>
-                    </View>
-                    <Text style={styles.LikesText}>20 likes</Text>
-                    <View style={styles.descriptionContainer}>
-                        <Text style={[styles.descriptionText, { fontWeight: 600}]}>Nombre de usuario:</Text>
-                        <Text style={styles.descriptionText}> Lorem ipsum dolor sit amet, </Text>
-                    </View>
-                </View>            
-            </View>
+    const baseUrl = BASE_URL;
+    const { authToken, userData } = useContext(AuthContext);
+    const [data, setData] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
 
-            <View style={styles.postContainer}>
-                <View>
-                    <View style={styles.header}>
-                        <Image 
-                            style={styles.profileImage} 
-                            source={require('../../assets/imagen_perfil_ejemplo.jpeg')} 
-                        />
-                        <Text style={styles.title}>Nombre de usuario</Text>
-                    </View>
-                    <View>
-                        <Image  
-                            style={styles.postImage} 
-                            source={require('../../assets/post.jpg')} 
-                        />
-                    </View>
-                    <View style={styles.actions}>
-                        <TouchableOpacity>
-                            <FeatherIcon name="heart" color="#2b64e3" size={24} style={styles.iconHeart} />
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <FeatherIcon name="message-circle" color="#2b64e3" size={24} style={styles.iconMessage} />
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <FeatherIcon name="bookmark" color="#2b64e3" size={24} style={styles.iconMessage} />
-                        </TouchableOpacity>
-                    </View>
-                    <Text style={styles.LikesText}>20 likes</Text>
-                    <View style={styles.descriptionContainer}>
-                        <Text style={[styles.descriptionText, { fontWeight: 600}]}>Nombre de usuario:</Text>
-                        <Text style={styles.descriptionText}> Lorem ipsum dolor sit amet, </Text>
-                    </View>
-                </View>            
+    const handleRefresh = () => {
+        setRefreshing(true);
+        fetch(`${baseUrl}/feed/${userData.id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            }
+        })
+
+            .then(response => response.json())
+            .then(json => {
+                setData(json)
+            })
+            .catch(error => {
+                alert(error);
+            })
+            .finally(() => setRefreshing(false));
+
+
+    }
+    useEffect(() => {
+        fetch(`${baseUrl}/feed/${userData.id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            }
+        })
+            .then(response => response.json())
+            .then(json => setData(json))
+            .catch(error => alert(error))
+    }, []);
+
+    const renderItem = ({ item }) => (
+        <View style={styles.postContainer}>
+            <View style={styles.header}>
+                <Image
+                    style={styles.profileImage}
+                    source={{ uri: item.user?.photo }}
+                />
+                <Text style={styles.title}>{item.user?.name}</Text>
+            </View>
+            <Image
+                style={[styles.postImage, { resizeMode: 'stretch' }]}
+                source={{ uri: item.image }}
+            />
+            <View style={styles.actions}>
+                <TouchableOpacity>
+                    <FeatherIcon name="heart" color="#2b64e3" size={24} style={styles.iconHeart} />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                    <FeatherIcon name="message-circle" color="#2b64e3" size={24} style={styles.iconMessage} />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                    <FeatherIcon name="bookmark" color="#2b64e3" size={24} style={styles.iconMessage} />
+                </TouchableOpacity>
+            </View>
+            <Text style={styles.LikesText}>{item.likes} Likes</Text>
+            <View style={styles.descriptionContainer}>
+                <Text style={[styles.descriptionText, { fontWeight: '600' }]}>{item.user?.name}:</Text>
+                <Text style={styles.descriptionText}> {item.content} </Text>
             </View>
         </View>
+    );
+
+    return (
+        <FlatList
+            data={data}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderItem}
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            contentContainerStyle={styles.container}
+        />
     );
 };
 
 const styles = StyleSheet.create({
     container: {
+        paddingBottom: 60,
     },
     postContainer: {
         marginTop: 20,
@@ -121,9 +134,9 @@ const styles = StyleSheet.create({
         marginLeft: 15,
     },
     LikesText: {
-        marginLeft: 13, 
-        marginTop: 10, 
-        fontSize: 16, 
+        marginLeft: 13,
+        marginTop: 10,
+        fontSize: 16,
         fontWeight: 600,
         color: 'black'
     },

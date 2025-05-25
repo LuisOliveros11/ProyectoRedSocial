@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from "react";
 import { StyleSheet, SafeAreaView, View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import Post from '../Components/Post';
 import useLocation from '../hooks/UseLocation';
@@ -19,14 +19,7 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        contentContainerStyle={{ paddingBottom: 50 }}
-        bounces={false}
-        overScrollMode="never"
-        alwaysBounceVertical={false}
-      >
-        <Post />
-      </ScrollView>
+      <Post />
     </SafeAreaView>
   );
 };
@@ -38,6 +31,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     backgroundColor: '#eBecf4',
+    
   },
   loadingContainer: {
     flex: 1,
