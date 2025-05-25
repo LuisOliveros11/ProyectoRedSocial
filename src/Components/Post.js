@@ -1,6 +1,7 @@
 import { View, Text, Image, Dimensions, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import { useEffect, useState, useContext } from "react";
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import { MaterialIcons } from '@expo/vector-icons';
 import { BASE_URL } from '../../config';
 import { AuthContext } from './AuthContext';
 
@@ -46,37 +47,77 @@ const Post = () => {
             .catch(error => alert(error))
     }, []);
 
-    const renderItem = ({ item }) => (
-        <View style={styles.postContainer}>
-            <View style={styles.header}>
+    const renderItem = ({ item }) => {
+        const isSaved = item.savedByUsers?.some(user => user.id === userData.id);
+
+        return (
+            <View style={styles.postContainer}>
+                <View style={styles.header}>
+                    <Image
+                        style={styles.profileImage}
+                        source={{ uri: item.user?.photo }}
+                    />
+                    <Text style={styles.title}>{item.user?.name}</Text>
+                </View>
                 <Image
-                    style={styles.profileImage}
-                    source={{ uri: item.user?.photo }}
+                    style={[styles.postImage, { resizeMode: 'stretch' }]}
+                    source={{ uri: item.image }}
                 />
-                <Text style={styles.title}>{item.user?.name}</Text>
+                <View style={styles.actions}>
+                    <TouchableOpacity>
+                        <FeatherIcon name="heart" color="#2b64e3" size={24} style={styles.iconHeart} />
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <FeatherIcon name="message-circle" color="#2b64e3" size={24} style={styles.iconMessage} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={async () => {
+                        try {
+
+                            const response = await fetch(`${baseUrl}/guardarPost`, {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    'Authorization': `Bearer ${authToken}`,
+                                },
+                                body: JSON.stringify({
+                                    userId: userData.id,
+                                    postId: item.id
+                                })
+                            });
+
+                            const data = await response.json();
+
+                            if (response.ok) {
+                                alert(data.message);
+                                handleRefresh();
+                            } else {
+                                alert(data.message);
+                            }
+
+                        } catch (error) {
+                            console.error("Error al actualizar los datos:", error);
+                            alert("No se pudo conectar al servidor.");
+                        }
+
+                    }}>
+                        <MaterialIcons
+                            name={isSaved ? "bookmark" : "bookmark-border"}
+                            color="#2b64e3"
+                            size={27}
+                            style={styles.iconMessage}
+                        />
+                    </TouchableOpacity>
+                </View>
+                <Text style={styles.LikesText}>{item.likes} Likes</Text>
+                <View style={styles.descriptionContainer}>
+                    <Text style={[styles.descriptionText, { fontWeight: '600' }]}>{item.user?.name}:</Text>
+                    <Text style={styles.descriptionText}> {item.content} </Text>
+                </View>
             </View>
-            <Image
-                style={[styles.postImage, { resizeMode: 'stretch' }]}
-                source={{ uri: item.image }}
-            />
-            <View style={styles.actions}>
-                <TouchableOpacity>
-                    <FeatherIcon name="heart" color="#2b64e3" size={24} style={styles.iconHeart} />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <FeatherIcon name="message-circle" color="#2b64e3" size={24} style={styles.iconMessage} />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <FeatherIcon name="bookmark" color="#2b64e3" size={24} style={styles.iconMessage} />
-                </TouchableOpacity>
-            </View>
-            <Text style={styles.LikesText}>{item.likes} Likes</Text>
-            <View style={styles.descriptionContainer}>
-                <Text style={[styles.descriptionText, { fontWeight: '600' }]}>{item.user?.name}:</Text>
-                <Text style={styles.descriptionText}> {item.content} </Text>
-            </View>
-        </View>
-    );
+
+        )
+
+    };
 
     return (
         <FlatList
