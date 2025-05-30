@@ -90,7 +90,7 @@ const Post = () => {
                                 console.error("Error al actualizar los datos:", error);
                                 alert("No se pudo conectar al servidor.");
                             }
-                        }else{
+                        } else {
                             try {
                                 const response = await fetch(`${baseUrl}/quitarLike/${item.id}`, {
                                     method: "DELETE",
@@ -125,32 +125,54 @@ const Post = () => {
                         <FeatherIcon name="message-circle" color="#2b64e3" size={24} style={styles.iconMessage} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={async () => {
-                        try {
+                        if (!isSaved) {
+                            try {
 
-                            const response = await fetch(`${baseUrl}/guardarPost`, {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    'Authorization': `Bearer ${authToken}`,
-                                },
-                                body: JSON.stringify({
-                                    userId: userData.id,
-                                    postId: item.id
-                                })
-                            });
+                                const response = await fetch(`${baseUrl}/guardarPost`, {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        'Authorization': `Bearer ${authToken}`,
+                                    },
+                                    body: JSON.stringify({
+                                        userId: userData.id,
+                                        postId: item.id
+                                    })
+                                });
 
-                            const data = await response.json();
+                                const data = await response.json();
 
-                            if (response.ok) {
-                                alert(data.message);
-                                handleRefresh();
-                            } else {
-                                alert(data.message);
+                                if (response.ok) {
+                                    alert(data.message);
+                                    handleRefresh();
+                                } else {
+                                    alert(data.message);
+                                }
+
+                            } catch (error) {
+                                console.error("Error al actualizar los datos:", error);
+                                alert("No se pudo conectar al servidor.");
+                            }
+                        }else {
+                             try {
+                                const response = await fetch(`${baseUrl}/eliminarPostGuardado/${item.id}`, {
+                                    method: "DELETE",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        'Authorization': `Bearer ${authToken}`,
+                                    },
+
+                                });
+                                const data = await response.json();
+                                if (response.ok) {
+                                    alert(data.message);
+                                    handleRefresh();
+                                }
+                            } catch (error) {
+                                console.error("Error al actualizar los datos:", error);
+                                alert("No se pudo conectar al servidor.");
                             }
 
-                        } catch (error) {
-                            console.error("Error al actualizar los datos:", error);
-                            alert("No se pudo conectar al servidor.");
                         }
 
                     }}>
