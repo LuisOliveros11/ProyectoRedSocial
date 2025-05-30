@@ -11,45 +11,51 @@ const Post = () => {
     const baseUrl = BASE_URL;
     const { authToken, userData } = useContext(AuthContext);
     const [data, setData] = useState([]);
+    const [likes, setLikes] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
 
     const handleRefresh = () => {
         setRefreshing(true);
-        fetch(`${baseUrl}/feed/${userData.id}`, {
+        fetchData();
+    }
+
+    const fetchData = () => {
+        const fetchFeed = fetch(`${baseUrl}/feed/${userData.id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${authToken}`
             }
-        })
+        }).then(response => response.json());
 
-            .then(response => response.json())
-            .then(json => {
-                setData(json)
+        const fetchLikes = fetch(`${baseUrl}/likes/${userData.id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            }
+        }).then(response => response.json());
+
+        Promise.all([fetchFeed, fetchLikes])
+            .then(([feedData, likesData]) => {
+                setData(feedData);
+                setLikes(likesData)
             })
             .catch(error => {
                 alert(error);
             })
-            .finally(() => setRefreshing(false));
+            .finally(() => {
+                setRefreshing(false);
+            });
+    };
 
-
-    }
     useEffect(() => {
-        fetch(`${baseUrl}/feed/${userData.id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${authToken}`
-            }
-        })
-            .then(response => response.json())
-            .then(json => setData(json))
-            .catch(error => alert(error))
+        fetchData();
     }, []);
 
     const renderItem = ({ item }) => {
         const isSaved = item.savedByUsers?.some(user => user.id === userData.id);
-
+        const isLiked = item.likedByUsers?.some(user => user.id === userData.id);
         return (
             <View style={styles.postContainer}>
                 <View style={styles.header}>
@@ -64,8 +70,56 @@ const Post = () => {
                     source={{ uri: item.image }}
                 />
                 <View style={styles.actions}>
-                    <TouchableOpacity>
-                        <FeatherIcon name="heart" color="#2b64e3" size={24} style={styles.iconHeart} />
+                    <TouchableOpacity onPress={async () => {
+                        if (!isLiked) {
+                            try {
+                                const response = await fetch(`${baseUrl}/postLike/${item.id}`, {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        'Authorization': `Bearer ${authToken}`,
+                                    },
+
+                                });
+                                const data = await response.json();
+                                if (response.ok) {
+                                    alert(data.message);
+                                    handleRefresh();
+                                }
+                            } catch (error) {
+                                console.error("Error al actualizar los datos:", error);
+                                alert("No se pudo conectar al servidor.");
+                            }
+                        }else{
+                            try {
+                                const response = await fetch(`${baseUrl}/quitarLike/${item.id}`, {
+                                    method: "DELETE",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        'Authorization': `Bearer ${authToken}`,
+                                    },
+
+                                });
+                                const data = await response.json();
+                                if (response.ok) {
+                                    alert(data.message);
+                                    handleRefresh();
+                                }
+                            } catch (error) {
+                                console.error("Error al actualizar los datos:", error);
+                                alert("No se pudo conectar al servidor.");
+                            }
+
+                        }
+
+                    }}
+                    >
+                        <MaterialIcons
+                            name={isLiked ? "favorite" : "favorite-border"}
+                            color="#2b64e3"
+                            size={27}
+                            style={styles.iconMessage}
+                        />
                     </TouchableOpacity>
                     <TouchableOpacity>
                         <FeatherIcon name="message-circle" color="#2b64e3" size={24} style={styles.iconMessage} />
