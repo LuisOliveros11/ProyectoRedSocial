@@ -52,24 +52,6 @@ const SettingsScreen = () => {
           <View style={styles.section}>
             <Text style={styles.sectionHeader}>Cuenta</Text>
             <TouchableOpacity onPress={() => {
-              //Reedirigir a pantalla
-            }}>
-              <View style={styles.row}>
-                <View style={[styles.rowIcon, { backgroundColor: "#134ded" }]}>
-                  <FeatherIcon name="bell" color="#fff" size={18}></FeatherIcon>
-                </View>
-                <Text style={[styles.rowLabel, { flex: 1 }]}>Notificaciones</Text>
-
-
-                <FeatherIcon
-                  name="chevron-right"
-                  color="#0c0c0c"
-                  size={22}
-                />
-              </View>
-
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => {
               navigation.navigate('Lista guardados');
             }}>
               <View style={styles.row}>
