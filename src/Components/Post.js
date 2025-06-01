@@ -1,9 +1,10 @@
 import { View, Text, Image, Dimensions, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { MaterialIcons } from '@expo/vector-icons';
 import { BASE_URL } from '../../config';
 import { AuthContext } from './AuthContext';
+import CommentsSheet from './CommentsSheet';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -14,10 +15,13 @@ const Post = () => {
     const [likes, setLikes] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
 
+    const sheetRef = useRef();
+
     const handleRefresh = () => {
         setRefreshing(true);
         fetchData();
     }
+
 
     const fetchData = () => {
         const fetchFeed = fetch(`${baseUrl}/feed/${userData.id}`, {
@@ -118,10 +122,10 @@ const Post = () => {
                             name={isLiked ? "favorite" : "favorite-border"}
                             color="#2b64e3"
                             size={27}
-                            style={styles.iconMessage}
+                            style={styles.iconHeart}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => sheetRef.current?.open()}>
                         <FeatherIcon name="message-circle" color="#2b64e3" size={24} style={styles.iconMessage} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={async () => {
@@ -153,8 +157,8 @@ const Post = () => {
                                 console.error("Error al actualizar los datos:", error);
                                 alert("No se pudo conectar al servidor.");
                             }
-                        }else {
-                             try {
+                        } else {
+                            try {
                                 const response = await fetch(`${baseUrl}/eliminarPostGuardado/${item.id}`, {
                                     method: "DELETE",
                                     headers: {
@@ -191,19 +195,25 @@ const Post = () => {
                 </View>
             </View>
 
+
         )
 
     };
 
     return (
-        <FlatList
-            data={data}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={renderItem}
-            refreshing={refreshing}
-            onRefresh={handleRefresh}
-            contentContainerStyle={styles.container}
-        />
+        <>
+            <FlatList
+                data={data}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={renderItem}
+                refreshing={refreshing}
+                onRefresh={handleRefresh}
+                contentContainerStyle={styles.container}
+            />
+            <CommentsSheet
+                ref={sheetRef}
+            />
+        </>
     );
 };
 
@@ -236,18 +246,18 @@ const styles = StyleSheet.create({
         width: screenWidth,
     },
     actions: {
-        paddingHorizontal: 13,
+        paddingHorizontal: 12,
         flexDirection: 'row',
         alignItems: 'center',
         marginTop: 15,
     },
     iconHeart: {
         height: 24,
-        width: 24,
+        width: 25,
     },
     iconMessage: {
         height: 24,
-        width: 28,
+        width: 24,
         marginLeft: 15,
     },
     LikesText: {

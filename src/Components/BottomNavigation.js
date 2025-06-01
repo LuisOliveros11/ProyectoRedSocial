@@ -1,6 +1,6 @@
 import React, { Children, createContext, useState, useEffect, useContext, useRef } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons'; // Iconos para la barra inferior
+import { Ionicons } from '@expo/vector-icons';
 import { TouchableOpacity, Image, Text, StyleSheet, SafeAreaView, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
