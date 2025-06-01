@@ -60,7 +60,6 @@ const Post = () => {
     }, []);
 
     useEffect(() => {
-        console.log(idPost);
         if (idPost !== null) {
             sheetRef.current?.open();
         }
@@ -76,7 +75,14 @@ const Post = () => {
                         style={styles.profileImage}
                         source={{ uri: item.user?.photo }}
                     />
-                    <Text style={styles.title}>{item.user?.name}</Text>
+                    <View style={styles.textPost}>
+                        <Text style={styles.title}>{item.user?.name}</Text>
+                        <View style={styles.locationText}>
+                            <FeatherIcon name="map-pin" color="#6b6b6b" size={18} style={{paddingLeft: 7}}/>
+                            <Text style={[styles.title, { fontWeight: '400', fontSize: 12, paddingLeft: 6 }]}>{item.country},</Text>
+                            <Text style={[styles.title, { fontWeight: '300', fontSize: 12, paddingLeft: 6 }]}>{item.city}</Text>
+                        </View>
+                    </View>
                 </View>
                 <Image
                     style={[styles.postImage, { resizeMode: 'stretch' }]}
@@ -254,11 +260,15 @@ const styles = StyleSheet.create({
         width: 30,
         borderRadius: 15,
     },
+
     title: {
         paddingLeft: 10,
         fontSize: 16,
         fontWeight: '600',
         color: 'black',
+    },
+    locationText: {
+        flexDirection: 'row'
     },
     postImage: {
         height: 400,
