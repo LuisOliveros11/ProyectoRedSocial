@@ -7,6 +7,10 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 import { BASE_URL } from '../../../config';
+import CommentsSheet from "../../Components/CommentsSheet";
+import PostComment from "../../Components/PostComment";
+import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
+
 const screenWidth = Dimensions.get('window').width;
 
 
@@ -14,10 +18,13 @@ const SavedPostView = () => {
     const route = useRoute();
     const { postId, postIndex } = route.params || {};
     const baseUrl = BASE_URL;
+    const sheetRef = useRef();
+
     const { authToken, userData } = useContext(AuthContext);
     const listRef = useRef(null);
     const [data, setData] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
+    const [idPost, setIdPost] = useState(null);
     const isInitialLoad = useRef(true);
 
 
@@ -77,7 +84,8 @@ const SavedPostView = () => {
     }, [data, postId, postIndex]);
 
     const renderItem = ({ item }) => {
-        const isSaved = item.savedByUsers?.some(user => user.id === userData.id);
+        const isLiked = item.likedByUsers?.some(user => user.id === userData.id);
+
 
         return (
             <View style={styles.postContainer}>
@@ -93,41 +101,96 @@ const SavedPostView = () => {
                     source={{ uri: item.image }}
                 />
                 <View style={styles.actions}>
-                    <TouchableOpacity>
-                        <FeatherIcon name="heart" color="#2b64e3" size={24} style={styles.iconHeart} />
+                    <TouchableOpacity onPress={async () => {
+                        if (!isLiked) {
+                            try {
+                                const response = await fetch(`${baseUrl}/postLike/${item.id}`, {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        'Authorization': `Bearer ${authToken}`,
+                                    },
+
+                                });
+                                const data = await response.json();
+                                if (response.ok) {
+                                    Toast.show({
+                                        type: ALERT_TYPE.SUCCESS,
+                                        title: 'Dar like',
+                                        textBody: data.message,
+                                    });
+                                    handleRefresh();
+
+                                }
+                            } catch (error) {
+                                console.error("Error al actualizar los datos:", error);
+                                alert("No se pudo conectar al servidor.");
+                            }
+                        } else {
+                            try {
+                                const response = await fetch(`${baseUrl}/quitarLike/${item.id}`, {
+                                    method: "DELETE",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        'Authorization': `Bearer ${authToken}`,
+                                    },
+
+                                });
+                                const data = await response.json();
+                                if (response.ok) {
+                                    Toast.show({
+                                        type: ALERT_TYPE.SUCCESS,
+                                        title: 'Quitar like',
+                                        textBody: data.message,
+                                    });
+                                    handleRefresh();
+                                }
+                            } catch (error) {
+                                console.error("Error al actualizar los datos:", error);
+                                alert("No se pudo conectar al servidor.");
+                            }
+
+                        }
+
+                    }}
+                    >
+                        <MaterialIcons
+                            name={isLiked ? "favorite" : "favorite-border"}
+                            color="#2b64e3"
+                            size={25}
+                            style={styles.iconHeart}
+                        />
                     </TouchableOpacity>
-                    <TouchableOpacity>
+
+                    <TouchableOpacity onPress={() =>{
+                         setIdPost(item.id);
+                        sheetRef.current?.open();
+                    }}>
                         <FeatherIcon name="message-circle" color="#2b64e3" size={24} style={styles.iconMessage} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={async () => {
                         try {
-
-                            const response = await fetch(`${baseUrl}/guardarPost`, {
-                                method: "POST",
+                            const response = await fetch(`${baseUrl}/eliminarPostGuardado/${item.id}`, {
+                                method: "DELETE",
                                 headers: {
                                     "Content-Type": "application/json",
                                     'Authorization': `Bearer ${authToken}`,
                                 },
-                                body: JSON.stringify({
-                                    userId: userData.id,
-                                    postId: item.id
-                                })
+
                             });
-
                             const data = await response.json();
-
                             if (response.ok) {
-                                alert(data.message);
+                                Toast.show({
+                                    type: ALERT_TYPE.SUCCESS,
+                                    title: 'Eliminar guardado',
+                                    textBody: data.message,
+                                });
                                 handleRefresh();
-                            } else {
-                                alert(data.message);
                             }
-
                         } catch (error) {
                             console.error("Error al actualizar los datos:", error);
                             alert("No se pudo conectar al servidor.");
                         }
-
                     }}>
                         <MaterialIcons
                             name={"bookmark"}
@@ -147,23 +210,32 @@ const SavedPostView = () => {
         )
 
     };
-    return (
-        <FlatList
-            ref={listRef}
-            data={data}
-            keyExtractor={item => item.id.toString()}
-            renderItem={renderItem}
-            refreshing={refreshing}
-            onRefresh={handleRefresh}
-            contentContainerStyle={styles.container}
-            onScrollToIndexFailed={info => {
+     return (
+        <>
+            <FlatList
+                data={data}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={renderItem}
+                refreshing={refreshing}
+                onRefresh={handleRefresh}
+                contentContainerStyle={styles.container}
+                 onScrollToIndexFailed={info => {
                 setTimeout(() => {
                     listRef.current?.scrollToIndex({ index: info.index, animated: true });
                 }, 100);
             }}
+            />
+            <View style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}>
+                <PostComment idPost={idPost} />
+            </View>
+            <CommentsSheet
+                ref={sheetRef}
+                idPost={idPost}
+            />
 
-        />
+        </>
     );
+    
 };
 
 
@@ -199,18 +271,18 @@ const styles = StyleSheet.create({
         width: screenWidth,
     },
     actions: {
-        paddingHorizontal: 13,
+        paddingHorizontal: 12,
         flexDirection: 'row',
         alignItems: 'center',
         marginTop: 15,
     },
     iconHeart: {
         height: 24,
-        width: 24,
+        width: 25,
     },
     iconMessage: {
         height: 24,
-        width: 28,
+        width: 24,
         marginLeft: 15,
     },
     LikesText: {

@@ -5,6 +5,8 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import { AuthContext } from './AuthContext';
 import { BASE_URL } from '../../config';
 import PostComment from './PostComment';
+import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
+
 
 const screenHeight = Dimensions.get('window').height;
 
@@ -100,7 +102,6 @@ const CommentsSheet = forwardRef(({ idPost }, ref) => {
                   const data = await response.json();
 
                   if (response.ok) {
-                    alert("Comentario publicado");
                     postCommentRef.current?.handleRefresh?.();
                     setForm({ comment: '' });
                   } else {
@@ -136,7 +137,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingBottom: 10,
     paddingTop: 10,
-    borderBottomWidth: 1,         
+    borderBottomWidth: 1,
     borderBottomColor: '#ccc',
   },
 
@@ -160,7 +161,7 @@ const styles = StyleSheet.create({
   postComment: {
     flex: 1,
     justifyContent: 'flex-end',
-    
+
   },
   lineDivider: {
     borderBottomColor: '#b5b5b5',
@@ -172,7 +173,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
     width: '100%',
-   
+
   },
   input: {
     flex: 1,

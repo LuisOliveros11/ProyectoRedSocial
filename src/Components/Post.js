@@ -6,6 +6,7 @@ import { BASE_URL } from '../../config';
 import { AuthContext } from './AuthContext';
 import CommentsSheet from './CommentsSheet';
 import PostComment from './PostComment';
+import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -78,7 +79,7 @@ const Post = () => {
                     <View style={styles.textPost}>
                         <Text style={styles.title}>{item.user?.name}</Text>
                         <View style={styles.locationText}>
-                            <FeatherIcon name="map-pin" color="#6b6b6b" size={18} style={{paddingLeft: 7}}/>
+                            <FeatherIcon name="map-pin" color="#6b6b6b" size={18} style={{ paddingLeft: 7 }} />
                             <Text style={[styles.title, { fontWeight: '400', fontSize: 12, paddingLeft: 6 }]}>{item.country},</Text>
                             <Text style={[styles.title, { fontWeight: '300', fontSize: 12, paddingLeft: 6 }]}>{item.city}</Text>
                         </View>
@@ -102,8 +103,13 @@ const Post = () => {
                                 });
                                 const data = await response.json();
                                 if (response.ok) {
-                                    alert(data.message);
+                                    Toast.show({
+                                        type: ALERT_TYPE.SUCCESS,
+                                        title: 'Dar like',
+                                        textBody: data.message,
+                                    });
                                     handleRefresh();
+
                                 }
                             } catch (error) {
                                 console.error("Error al actualizar los datos:", error);
@@ -121,7 +127,11 @@ const Post = () => {
                                 });
                                 const data = await response.json();
                                 if (response.ok) {
-                                    alert(data.message);
+                                    Toast.show({
+                                        type: ALERT_TYPE.SUCCESS,
+                                        title: 'Quitar like',
+                                        textBody: data.message,
+                                    });
                                     handleRefresh();
                                 }
                             } catch (error) {
@@ -167,7 +177,11 @@ const Post = () => {
                                 const data = await response.json();
 
                                 if (response.ok) {
-                                    alert(data.message);
+                                    Toast.show({
+                                        type: ALERT_TYPE.SUCCESS,
+                                        title: 'Guardado',
+                                        textBody: data.message,
+                                    });
                                     handleRefresh();
                                 } else {
                                     alert(data.message);
@@ -189,7 +203,11 @@ const Post = () => {
                                 });
                                 const data = await response.json();
                                 if (response.ok) {
-                                    alert(data.message);
+                                    Toast.show({
+                                        type: ALERT_TYPE.SUCCESS,
+                                        title: 'Eliminar guardado',
+                                        textBody: data.message,
+                                    });
                                     handleRefresh();
                                 }
                             } catch (error) {

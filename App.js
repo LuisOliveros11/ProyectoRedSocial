@@ -12,40 +12,29 @@ import PostImage from './src/tabs/PostImage';
 import BottomNavigator from './src/Components/BottomNavigation';
 import SettingsScreen from './src/tabs/SettingsScreen';
 import { AuthProvider } from './src/Components/AuthContext';
+import { AlertNotificationRoot } from 'react-native-alert-notification';
+
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <AuthProvider>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Register" component={Register} options={{
-            headerShown: true,
-          }} />
-          <Stack.Screen name="Home" component={BottomNavigator} options={{
-            headerShown: false,
-          }} />
-          <Stack.Screen name="Cambiar contraseña" component={ChangePassword} options={{
-            headerShown: true,
-          }} />
-          <Stack.Screen name="Editar perfil" component={EditProfile} options={{
-            headerShown: true,
-          }} />
-          <Stack.Screen name="Vista previa" component={PostImage} options={{
-            headerShown: true,
-          }} />
-          <Stack.Screen name="Lista guardados" component={SavedPostsList} options={{
-            headerShown: true,
-          }} />
-          <Stack.Screen name="Publicaciones guardadas" component={SavedPostView} options={{
-            headerShown: true,
-          }} />
-
-        </Stack.Navigator>
-      </NavigationContainer>
-    </AuthProvider>
+    <AlertNotificationRoot>
+      <AuthProvider>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Register" component={Register} options={{ headerShown: true }} />
+            <Stack.Screen name="Home" component={BottomNavigator} />
+            <Stack.Screen name="Cambiar contraseña" component={ChangePassword} options={{ headerShown: true }} />
+            <Stack.Screen name="Editar perfil" component={EditProfile} options={{ headerShown: true }} />
+            <Stack.Screen name="Vista previa" component={PostImage} options={{ headerShown: true }} />
+            <Stack.Screen name="Lista guardados" component={SavedPostsList} options={{ headerShown: true }} />
+            <Stack.Screen name="Publicaciones guardadas" component={SavedPostView} options={{ headerShown: true }} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </AuthProvider>
+    </AlertNotificationRoot>
   );
 }
 

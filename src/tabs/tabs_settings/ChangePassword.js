@@ -2,10 +2,11 @@ import React, { useState, useContext } from 'react';
 import { AuthContext } from '../../Components/AuthContext';
 
 import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ScrollView, Dimensions, TextInput } from 'react-native';
-import {useNavigation,} from '@react-navigation/native';
+import { useNavigation, } from '@react-navigation/native';
 import FeatherIcon from 'react-native-vector-icons/Feather'
 
 import { BASE_URL } from '../../../config';
+import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -21,11 +22,10 @@ const ChangePassword = () => {
         <SafeAreaView style={styles.container}>
             <View style={styles.TextContainer}>
                 <Text style={styles.descriptionText}>
-                    Elige una nueva contraseña para tu cuenta. Recuerda que debe ser segura. 
+                    Elige una nueva contraseña para tu cuenta. Recuerda que debe ser segura.
                 </Text>
             </View>
-            <ScrollView showsVerticalScrollIndicator={false} >
-                <View style={styles.form}>
+             <View style={styles.form}>
                     <View style={styles.input}>
                         <Text style={styles.inputLabel}>Nueva contraseña</Text>
                         <View style={styles.inputWithIcon}>
@@ -81,7 +81,7 @@ const ChangePassword = () => {
                                 }
 
                                 try {
-                         
+
                                     const response = await fetch(`${baseUrl}/actualizarUsuario/${userData.id}`, {
                                         method: "PUT",
                                         headers: {
@@ -96,8 +96,16 @@ const ChangePassword = () => {
                                     const data = await response.json();
 
                                     if (response.ok) {
-                                        alert("La contraseña se ha actualizado exitosamente");
-                                        navigation.goBack(); 
+                                        Dialog.show({
+                                            type: ALERT_TYPE.SUCCESS,
+                                            title: 'Contraseña cambiada',
+                                            textBody: data.message,
+                                            autoClose: 800,
+                                            onHide: () => {
+                                                navigation.goBack();
+                                            },
+                                        });
+                                        
                                     } else {
                                         alert(data.message || "Error al cambiar la contraseña");
                                     }
@@ -112,10 +120,7 @@ const ChangePassword = () => {
                             </View>
                         </TouchableOpacity>
                     </View>
-                   
                 </View>
-
-            </ScrollView>
         </SafeAreaView>
     );
 };

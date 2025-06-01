@@ -6,6 +6,7 @@ import useLocation from '../hooks/UseLocation';
 import { BASE_URL } from '../../config';
 import { AuthContext } from '../Components/AuthContext';
 import { useNavigation } from '@react-navigation/native';
+import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -70,7 +71,16 @@ const PostImage = () => {
             const data = await response.json();
 
             if (response.ok) {
-              navigation.navigate('Home');
+              Dialog.show({
+                type: ALERT_TYPE.SUCCESS,
+                title: 'Publicación realizada',
+                textBody: data.message,
+                autoClose: 800,
+                onHide: () => {
+                  navigation.navigate('Home');
+
+                },
+              });
             } else {
               alert(data.message || "Error al realizar publicación");
             }

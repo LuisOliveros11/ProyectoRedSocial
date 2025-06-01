@@ -4,7 +4,7 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import { MaterialIcons } from '@expo/vector-icons';
 import { BASE_URL } from '../../config';
 import { AuthContext } from './AuthContext';
-
+import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -75,8 +75,8 @@ const PostComment = forwardRef(({ idPost }, ref) => {
                                 const data = await response.json();
 
                                 if (response.ok) {
-                                    alert("Comentario eliminado");
                                     handleRefresh();
+
                                 } else {
                                     alert(data.message || "No se pudo eliminar el comentario");
                                 }
