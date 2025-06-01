@@ -5,6 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { BASE_URL } from '../../config';
 import { AuthContext } from './AuthContext';
 import CommentsSheet from './CommentsSheet';
+import PostComment from './PostComment';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -14,6 +15,7 @@ const Post = () => {
     const [data, setData] = useState([]);
     const [likes, setLikes] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
+    const [idPost, setIdPost] = useState(null);
 
     const sheetRef = useRef();
 
@@ -56,6 +58,13 @@ const Post = () => {
     useEffect(() => {
         fetchData();
     }, []);
+
+    useEffect(() => {
+        console.log(idPost);
+        if (idPost !== null) {
+            sheetRef.current?.open();
+        }
+    }, [idPost]);
 
     const renderItem = ({ item }) => {
         const isSaved = item.savedByUsers?.some(user => user.id === userData.id);
@@ -125,9 +134,14 @@ const Post = () => {
                             style={styles.iconHeart}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => sheetRef.current?.open()}>
+
+                    <TouchableOpacity onPress={() => {
+                        setIdPost(item.id);
+                        sheetRef.current?.open();
+                    }}>
                         <FeatherIcon name="message-circle" color="#2b64e3" size={24} style={styles.iconMessage} />
                     </TouchableOpacity>
+
                     <TouchableOpacity onPress={async () => {
                         if (!isSaved) {
                             try {
@@ -210,9 +224,14 @@ const Post = () => {
                 onRefresh={handleRefresh}
                 contentContainerStyle={styles.container}
             />
+            <View style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}>
+                <PostComment idPost={idPost} />
+            </View>
             <CommentsSheet
                 ref={sheetRef}
+                idPost={idPost}
             />
+
         </>
     );
 };
