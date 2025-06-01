@@ -68,7 +68,6 @@ const CommentsSheet = forwardRef(({ idPost }, ref) => {
           </TouchableOpacity>
         </View>
         <PostComment ref={postCommentRef} idPost={idPost} />
-        <View style={styles.lineDivider} />
 
 
         <ScrollView
@@ -76,6 +75,7 @@ const CommentsSheet = forwardRef(({ idPost }, ref) => {
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.postComment}>
+            <View style={styles.lineDivider}></View>
             <View style={styles.inputRow}>
               <TextInput
                 style={styles.input}
@@ -160,6 +160,7 @@ const styles = StyleSheet.create({
   postComment: {
     flex: 1,
     justifyContent: 'flex-end',
+    
   },
   lineDivider: {
     borderBottomColor: '#b5b5b5',
@@ -171,6 +172,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
     width: '100%',
+   
   },
   input: {
     flex: 1,
