@@ -69,12 +69,21 @@ const Post = () => {
     const renderItem = ({ item }) => {
         const isSaved = item.savedByUsers?.some(user => user.id === userData.id);
         const isLiked = item.likedByUsers?.some(user => user.id === userData.id);
+
+        let uri_profile = "";
+
+        if(item.user.photo == "uploads/default_user_img/default_img.jpg"){
+            uri_profile = baseUrl + "/" + item.user.photo
+
+        }else{
+            uri_profile = item.user.photo;
+        }
         return (
             <View style={styles.postContainer}>
                 <View style={styles.header}>
                     <Image
                         style={styles.profileImage}
-                        source={{ uri: item.user?.photo }}
+                        source={{ uri: uri_profile}}
                     />
                     <View style={styles.textPost}>
                         <Text style={styles.title}>{item.user?.name}</Text>
@@ -108,6 +117,8 @@ const Post = () => {
                                         title: 'Dar like',
                                         textBody: data.message,
                                     });
+                                    console.log("photo publicacion: " + item.user.photo)
+                                    console.log("photo: " + userData.photo)
                                     handleRefresh();
 
                                 }

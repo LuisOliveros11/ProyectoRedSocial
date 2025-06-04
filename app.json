@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ProyectoRedSocial",
-    "slug": "ProyectoRedSocial",
+    "name": "Pixoly",
+    "slug": "Pixoly",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -20,7 +20,14 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.kevin016011.ProyectoRedSocial"
+      "package": "com.kevin016011.Pixoly",
+      "permissions": [
+        "INTERNET",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ],
+      "versionCode": 1,
+      "usesCleartextTraffic": true
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -32,6 +39,11 @@
           "locationAlwaysAndWhenInUsePermission": "¿Permitir que Pixoly acceda a tu ubicación?"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "f82d52c8-9732-458d-9d6b-3b1358df8311"
+      }
+    }
   }
 }
